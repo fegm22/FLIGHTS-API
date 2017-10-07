@@ -1,0 +1,59 @@
+{
+  "players": [
+    {
+      "playerName" : "Player 1",
+      "nickname" : "fran1",
+      "number" : "1",
+      "teamName" : "A",
+      "position" : "forward",
+      "goalsMade": 2,
+      "goalsReceived": -1
+    },
+    {
+      "playerName" : "Player 2",
+      "nickname" : "fran2",
+      "number" : "2",
+      "teamName" : "A",
+      "position" : "center",
+      "goalsMade": 2,
+      "goalsReceived": 0
+    },
+    {
+      "playerName" : "Player 3",
+      "nickname" : "fran3",
+      "number" : "3",
+      "teamName" : "A",
+      "position" : "guard",
+      "goalsMade": 2,
+      "goalsReceived": -1
+    },
+    {
+      "playerName" : "Player 4",
+      "nickname" : "fran4",
+      "number" : "1",
+      "teamName" : "B",
+      "position" : "forward",
+      "goalsMade": 2,
+      "goalsReceived": -1
+    },
+    {
+      "playerName" : "Player 5",
+      "nickname" : "fran5",
+      "number" : "2",
+      "teamName" : "B",
+      "position" : "center",
+      "goalsMade": 2,
+      "goalsReceived": -1
+    },
+    {
+      "playerName" : "Player 6",
+      "nickname" : "fran6",
+      "number" : "3",
+      "teamName" : "B",
+      "position" : "guard",
+      "goalsMade": 2,
+      "goalsReceived": -1
+    }
+
+  ]
+}
