@@ -1,0 +1,8 @@
+Mi idea fue crear dos microservicos. Cada uno para cada juego.
+
+Los ficheros se pueden leer desde cualquier aplicación y transformar las lineas en un Objeto JSON para llamar a estos servicios que entregan el Player mas valorado. 
+
+Queria implementar más cositas como Eureka... pero no me dio tiempo :)
+
+Un saludo,
+Fran
