@@ -13,12 +13,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RouteService {
 
     /**
      * This method will return the routes provided by the Ryanair API.
+     *
      * @return List<Route> with stop 1 and the list of the interconnected flights
      */
     public List<Route> getRoutes() {
@@ -41,56 +43,52 @@ public class RouteService {
     /**
      * This method will return a list of all airports who connect departure with arrival
      * It use the list of routes returned by the Ryanair API
+     *
      * @param listRoutes
-     * @param departure IATA Code for Departure Airport
-     * @param arrival IATA Code for Arrival Airport
+     * @param departure  IATA Code for Departure Airport
+     * @param arrival    IATA Code for Arrival Airport
      * @return list of IATA code connections
      */
     protected List<String> getAirportConnections(List<Route> listRoutes, String departure, String arrival) {
         Map<String, Set<String>> mapRoute = createRouteMap(listRoutes);
+
+        Set<String> arrivalFromOrigin = mapRoute.entrySet().stream()
+                .filter(map -> departure.equals(map.getKey()))
+                .map(map -> map.getValue())
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+
         List<String> airportsConnection = new ArrayList<>();
-        Set<String> arrivalFromOrigin = new HashSet<>();
 
-        for (String airportFrom : mapRoute.keySet()) {
-            if (airportFrom.equals(departure)) {
-                arrivalFromOrigin = mapRoute.get(airportFrom);
-                break;
+        arrivalFromOrigin.stream().forEach(connection -> {
+                Set<String> destiny = mapRoute.get(connection);
+                if (destiny.contains(arrival)) {
+                    airportsConnection.add(connection);
+                }
             }
-        }
-
-        for (String connection : arrivalFromOrigin) {
-            Set<String> destiny = mapRoute.get(connection);
-            if (!destiny.equals(arrival) && destiny.contains(arrival)) {
-                airportsConnection.add(connection);
-            }
-        }
+        );
 
         return airportsConnection;
     }
 
     /**
      * This method will return a map of all airports and his connections
+     *
      * @param listRoutes
      * @return a map of every Airport and his connections in a list.
      */
     private Map<String, Set<String>> createRouteMap(List<Route> listRoutes) {
+
         Map<String, Set<String>> mapRoute = new HashMap<>();
 
-        for (Route route : listRoutes) {
-            String airportFrom = route.getAirportFrom();
-            String airportTo = route.getAirportTo();
+        listRoutes.stream().forEach(route -> {
+                    String airportFrom = route.getAirportFrom();
+                    String airportTo = route.getAirportTo();
 
-            if (mapRoute.containsKey(airportFrom)) {
-                Set<String> airportsTo = mapRoute.get(airportFrom);
-                airportsTo.add(airportTo);
-                mapRoute.put(airportFrom, airportsTo);
-            } else {
-                Set<String> setTo = new HashSet<>();
-                setTo.add(airportTo);
-                mapRoute.put(airportFrom, setTo);
-            }
+                    mapRoute.computeIfAbsent(airportFrom, i -> new HashSet<>()).add(airportTo);
 
-        }
+                }
+        );
 
         return mapRoute;
     }
