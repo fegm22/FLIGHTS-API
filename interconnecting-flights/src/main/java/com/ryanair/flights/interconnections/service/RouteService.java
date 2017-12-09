@@ -61,11 +61,11 @@ public class RouteService {
         List<String> airportsConnection = new ArrayList<>();
 
         arrivalFromOrigin.stream().forEach(connection -> {
-                Set<String> destiny = mapRoute.get(connection);
-                if (destiny.contains(arrival)) {
-                    airportsConnection.add(connection);
+                    Set<String> destiny = mapRoute.get(connection);
+                    if (destiny.contains(arrival)) {
+                        airportsConnection.add(connection);
+                    }
                 }
-            }
         );
 
         return airportsConnection;
@@ -81,16 +81,16 @@ public class RouteService {
 
         Map<String, Set<String>> mapRoute = new HashMap<>();
 
-        listRoutes.stream().forEach(route -> {
-                    String airportFrom = route.getAirportFrom();
-                    String airportTo = route.getAirportTo();
-
-                    mapRoute.computeIfAbsent(airportFrom, i -> new HashSet<>()).add(airportTo);
-
-                }
-        );
+        listRoutes.stream().forEach(route -> addRoute(mapRoute, route));
 
         return mapRoute;
+    }
+
+    private void addRoute(Map<String, Set<String>> mapRoute, Route route) {
+        String airportFrom = route.getAirportFrom();
+        String airportTo = route.getAirportTo();
+
+        mapRoute.computeIfAbsent(airportFrom, i -> new HashSet<>()).add(airportTo);
     }
 
 }
