@@ -44,13 +44,12 @@ public class RouteService {
      * This method will return a list of all airports who connect departure with arrival
      * It use the list of routes returned by the Ryanair API
      *
-     * @param listRoutes
      * @param departure  IATA Code for Departure Airport
      * @param arrival    IATA Code for Arrival Airport
      * @return list of IATA code connections
      */
-    protected List<String> getAirportConnections(List<Route> listRoutes, String departure, String arrival) {
-        Map<String, Set<String>> mapRoute = createRouteMap(listRoutes);
+    public List<String> getAirportConnections(String departure, String arrival) {
+        Map<String, Set<String>> mapRoute = getAllAvailableRoutes();
 
         Set<String> arrivalFromOrigin = mapRoute.entrySet().stream()
                 .filter(map -> departure.equals(map.getKey()))
@@ -74,10 +73,11 @@ public class RouteService {
     /**
      * This method will return a map of all airports and his connections
      *
-     * @param listRoutes
      * @return a map of every Airport and his connections in a list.
      */
-    private Map<String, Set<String>> createRouteMap(List<Route> listRoutes) {
+    public Map<String, Set<String>> getAllAvailableRoutes() {
+
+        List<Route> listRoutes = getRoutes();
 
         Map<String, Set<String>> mapRoute = new HashMap<>();
 

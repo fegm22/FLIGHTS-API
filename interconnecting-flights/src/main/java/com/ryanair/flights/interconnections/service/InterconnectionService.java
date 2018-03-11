@@ -1,10 +1,8 @@
 package com.ryanair.flights.interconnections.service;
 
-import com.ryanair.flights.interconnections.domain.Leg;
 import com.ryanair.flights.interconnections.domain.Interconnection;
-import com.ryanair.flights.interconnections.domain.Route;
+import com.ryanair.flights.interconnections.domain.Leg;
 import com.ryanair.flights.interconnections.domain.RouteDetail;
-import com.ryanair.flights.interconnections.utils.Utils;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +34,13 @@ public class InterconnectionService {
      * @param arrivalDateTime arrival date time in ISO Format
      * @return List<Interconnection> List interconnections. stops 0: Direct flights and stops 1: Interconnected flights
      */
-    public List<Interconnection> execute(String departure, String arrival, String departureDateTime, String arrivalDateTime) {
-
-        LocalDateTime localDepartureDateTime = Utils.covertLocalDateTime(departureDateTime);
-        LocalDateTime localArrivalDateTime = Utils.covertLocalDateTime(arrivalDateTime);
+    public List<Interconnection> execute(String departure, String arrival, LocalDateTime departureDateTime, LocalDateTime arrivalDateTime) {
 
         List<Interconnection> interconnections = new ArrayList<>();
 
-        if (localDepartureDateTime.isBefore(localArrivalDateTime)) {
-            interconnections.add(getFlightsDirect(departure, arrival, localDepartureDateTime, localArrivalDateTime));
-            interconnections.add(getFlightsOneStop(departure, arrival, localDepartureDateTime, localArrivalDateTime));
+        if (departureDateTime.isBefore(arrivalDateTime)) {
+            interconnections.add(getFlightsDirect(departure, arrival, departureDateTime, arrivalDateTime));
+            interconnections.add(getFlightsOneStop(departure, arrival, departureDateTime, arrivalDateTime));
         }
 
         return interconnections;
@@ -89,8 +84,7 @@ public class InterconnectionService {
     @NonNull
     private Interconnection getFlightsOneStop(String departure, String arrival, LocalDateTime localDepartureDateTime, LocalDateTime localArrivalDateTime) {
 
-        List<Route> routes = routeService.getRoutes();
-        List<String> connections = routeService.getAirportConnections(routes, departure, arrival);
+        List<String> connections = routeService.getAirportConnections(departure, arrival);
         Map<Map<String, String>, List<RouteDetail>> departureConnections = new HashMap<>();
         Map<Map<String, String>, List<RouteDetail>> arrivalConnections = new HashMap<>();
         List<Leg> validConnections = new ArrayList<>();
